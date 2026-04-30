@@ -2,9 +2,9 @@ FROM binwiederhier/ntfy:latest
 
 COPY server.yml /etc/ntfy/server.yml
 
-VOLUME ["/var/lib/ntfy"]
+# Create the data directory so ntfy doesn't fatal on startup
+RUN mkdir -p /var/lib/ntfy /var/lib/ntfy/attachments
 
-# Koyeb injects PORT at runtime — ntfy reads it via shell expansion in CMD
 EXPOSE 8080
 
 ENTRYPOINT ["ntfy"]
