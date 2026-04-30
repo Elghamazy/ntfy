@@ -1,11 +1,11 @@
 FROM binwiederhier/ntfy:latest
 
 COPY server.yml /etc/ntfy/server.yml
+COPY entrypoint.sh /entrypoint.sh
 
-# Create the data directory so ntfy doesn't fatal on startup
-RUN mkdir -p /var/lib/ntfy /var/lib/ntfy/attachments
+RUN mkdir -p /var/lib/ntfy /var/lib/ntfy/attachments \
+    && chmod +x /entrypoint.sh
 
 EXPOSE 8080
 
-ENTRYPOINT ["ntfy"]
-CMD ["serve", "--config", "/etc/ntfy/server.yml"]
+ENTRYPOINT ["/entrypoint.sh"]

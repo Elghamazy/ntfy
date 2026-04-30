@@ -1,40 +1,32 @@
 # ntfy server configuration — optimized for Koyeb
 # Full reference: https://docs.ntfy.sh/config/
 
-# Koyeb terminates TLS for you, so set this to your Koyeb app URL
+# Koyeb terminates TLS for you, set this to your Koyeb app URL
 # e.g. https://your-app-name-yourorg.koyeb.app
-base-url: https://ntfy.elghamazy.com
+base-url: https://your-app-name-yourorg.koyeb.app
 
-# Koyeb injects $PORT at runtime — ntfy supports env var expansion here
-listen-http: ":${PORT:-8080}"
+# Replaced at runtime by entrypoint.sh using $PORT injected by Koyeb
+listen-http: ":8080"
 
-# Data directory
-# NOTE: Koyeb's filesystem is ephemeral. For persistent data, mount a
-# Koyeb persistent volume at /var/lib/ntfy, or use an external DB.
+# Data directory (ephemeral on Koyeb unless a volume is mounted)
 data-dir: /var/lib/ntfy
 
-# Message cache (survives container restarts only if volume is mounted)
 cache-file: /var/lib/ntfy/cache.db
 cache-duration: "12h"
 
-# Auth database
 auth-file: /var/lib/ntfy/auth.db
 
-# Access control:
-#   "deny-all"  — require auth to publish and subscribe (recommended)
-#   "read-write"— fully open, no auth required
+# deny-all = auth required to publish and subscribe (most secure)
 auth-default-access: "deny-all"
 
-# Koyeb sits behind a proxy/load balancer — this is required
+# Required — Koyeb sits behind a load balancer
 behind-proxy: true
 
-# Attachments (optional — comment out if you don't need them)
 attachment-cache-dir: /var/lib/ntfy/attachments
 attachment-total-size-limit: "1G"
 attachment-file-size-limit: "15M"
 attachment-expiry-duration: "3h"
 
-# Rate limiting
 visitor-subscription-limit: 30
 visitor-request-limit-burst: 60
 visitor-request-limit-replenish: "5s"
